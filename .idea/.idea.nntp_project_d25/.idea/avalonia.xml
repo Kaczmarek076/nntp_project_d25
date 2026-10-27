@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="nntp_project_d25/Views/MainWindow.axaml" value="nntp_project_d25/nntp_project_d25.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
