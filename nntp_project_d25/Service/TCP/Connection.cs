@@ -1,9 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using System.IO;
+using System.Net.Sockets;
 using System.Threading.Tasks;
+
+namespace nntp_project_d25.Service.TCP;
 
 public sealed class TcpConnectionService : IAsyncDisposable
 {
@@ -14,14 +15,14 @@ public sealed class TcpConnectionService : IAsyncDisposable
     public async Task ConnectAsync(string hostname, int port)
     {
         await DisconnectAsync();
-
         var client = new TcpClient();
 
         try
         {
-            await client.ConnectAsync(hostname, port);
-
-            var stream = client.GetStream();
+            Console.WriteLine(hostname +  ":" + port);
+            client.Connect(hostname, port);
+            NetworkStream stream = client.GetStream();
+            
             var reader = new StreamReader(stream);
             var writer = new StreamWriter(stream)
             {
@@ -32,10 +33,12 @@ public sealed class TcpConnectionService : IAsyncDisposable
             _client = client;
             _reader = reader;
             _writer = writer;
+            Console.WriteLine("Connected");
         }
         catch
         {
             client.Dispose();
+            Console.WriteLine("Could not connect to server.");
             throw;
         }
     }
@@ -59,13 +62,10 @@ public sealed class TcpConnectionService : IAsyncDisposable
 
             if (line is null)
                 throw new IOException("Connection closed by server.");
-
-            // A single period marks the end of NNTP multiline data.
+            
             if (line == ".")
                 break;
-
-            // NNTP dot-stuffing: lines starting with ".."
-            // represent data lines starting with ".".
+            
             if (line.StartsWith(".."))
                 line = line[1..];
 
@@ -103,4 +103,3 @@ public sealed class TcpConnectionService : IAsyncDisposable
         await DisconnectAsync();
     }
 }
-

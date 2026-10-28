@@ -15,11 +15,20 @@
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <StackPanel Orientation="Horizontal">
-        <TextBox Text="{Binding Greeting}"
-                 HorizontalAlignment="Center"
-                 VerticalAlignment="Center" />
-        <Button Click="Button_OnClick"></Button>
+
+    <StackPanel Margin="20" Spacing="10">
+        <Button Content="Add test item"
+                Click="Button_OnClick" />
+        <TextBox PlaceholderText="Username" Text="{Binding Username}"></TextBox>
+        <TextBox PlaceholderText="password" Text="{Binding Password}"></TextBox>
+        <TextBox
+            Text="{Binding CommandList}"
+            Foreground="Green"
+            Background="Black"
+            FontSize="14"
+            TextWrapping="Wrap"
+            AcceptsReturn="True"
+            IsReadOnly="True" />
     </StackPanel>
 
 </Window>
