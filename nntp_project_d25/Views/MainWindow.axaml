@@ -19,15 +19,15 @@
     <StackPanel Margin="20" Spacing="10">
         <Button Content="Add test item"
                 Click="Button_OnClick" />
-        <TextBox PlaceholderText="Username" Text="{Binding Username}"></TextBox>
-        <TextBox PlaceholderText="password" Text="{Binding Password}"></TextBox>
+        <TextBox PlaceholderText="Commands" Text="{Binding Password}"></TextBox>
         <TextBox
             Text="{Binding CommandList}"
             Foreground="Green"
             Background="Black"
-            FontSize="14"
+            FontSize="12"
             TextWrapping="Wrap"
-            AcceptsReturn="True"/>
+            AcceptsReturn="True"
+            />
     </StackPanel>
 
 </Window>

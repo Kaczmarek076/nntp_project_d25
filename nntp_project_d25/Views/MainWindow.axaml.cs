@@ -21,26 +21,30 @@ public partial class MainWindow : Window
         DataContext = ViewModel;
 
         _connectionService = connectionService;
+
+        //ServerLoop();
     }
+
+    private bool _isBusy;
 
     private async void Button_OnClick(object? sender, RoutedEventArgs reEventArgs)
     {
+        ViewModel.CommandList = await _connectionService.ReadLineAsync();
+        if (_isBusy)
+            return;
+        _isBusy = true;
+        //ViewModel.CommandList = await _connectionService.ReadLineAsync();
         try
         {
-            Console.WriteLine("test");
-            string? svar = await _connectionService.ReadLineAsync();
-            
-            Console.WriteLine(svar + Environment.NewLine);
-
-            await _connectionService.SendLineAsync("list" +  Environment.NewLine);
+            string message = ViewModel.Password + Environment.NewLine;
+            await _connectionService.SendLineAsync(message);
             List<string> answer = await _connectionService.ReadMultilineResponseAsync();
-            
-            
+
             foreach (var commands in answer)
             {
                 ViewModel.CommandList += commands + Environment.NewLine;
+                Console.WriteLine(commands);
             }
-            
         }
         catch (SocketException ex)
         {
@@ -53,6 +57,39 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             Console.WriteLine("Fejl: " + ex.Message);
+        }
+        finally
+        {
+            _isBusy = false;
+        }
+    }
+
+
+    public async void ServerLoop()
+    {
+        while (true)
+        {
+            try
+            {
+                string message = ViewModel.Password + Environment.NewLine;
+                await _connectionService.SendLineAsync(message + Environment.NewLine);
+                List<string> answer = await _connectionService.ReadMultilineResponseAsync();
+
+                foreach (var commands in answer)
+                    ViewModel.CommandList += commands + Environment.NewLine;
+            }
+            catch (SocketException ex)
+            {
+                Console.WriteLine("Netværksfejl: " + ex.Message);
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine("Læsefejl eller timeout: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Fejl: " + ex.Message);
+            }
         }
     }
 }
