@@ -6,10 +6,17 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="nntp_project_d25.Views.LoginScreen"
         x:DataType="viewModels:LoginViewModel"
+        Icon="/Assets/avalonia-logo.ico"
         Title="LoginScreen">
         
+        <Design.DataContext>
+                <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+                <viewModels:LoginViewModel />
+        </Design.DataContext>
+        
         <StackPanel>
-                <TextBox PlaceholderText="Serverhost Name" Text="{Binding ServerHostName}"></TextBox>
+                <TextBox PlaceholderText="Serverhost Name" Text="{Binding ServerHostName, Mode=TwoWay}" ></TextBox>
                 <TextBox PlaceholderText="Port" Text="{Binding Port}"></TextBox>
                 <Button Content="Log In" Click="Button_OnClick"></Button>
         </StackPanel>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -11,27 +12,37 @@ namespace nntp_project_d25.Views;
 public partial class LoginScreen : Window
 {
     
-    private readonly TcpConnectionService _connectionService; 
+    private readonly TcpConnectionService _connectionService;
     public LoginViewModel LoginViewModel { get; }
     public LoginScreen()
     {
         InitializeComponent();
         _connectionService = new TcpConnectionService();
         LoginViewModel = new LoginViewModel();
-        DataContext = this;
+        DataContext = LoginViewModel;
     }
 
-    private void Button_OnClick(object? sender, RoutedEventArgs e)
+    private async void Button_OnClick(object? sender, RoutedEventArgs e)
     {
-        Console.WriteLine("Login button pressed");
-        
-        _connectionService.ConnectAsync(LoginViewModel.ServerHostName, LoginViewModel.Port);
-        ChangeView();
+        try
+        {
+            await _connectionService.ConnectAsync(
+                LoginViewModel.ServerHostName,
+                LoginViewModel.Port);
+            
+            ChangeView(_connectionService);
+
+            Close();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
     }
 
-    private void ChangeView()
+    private void ChangeView(TcpConnectionService connectionService)
     {
-        var mainWindow = new MainWindow();
+        var mainWindow = new MainWindow(connectionService);
         mainWindow.Show();
         Close();    
     }

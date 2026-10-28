@@ -27,8 +27,7 @@
             Background="Black"
             FontSize="14"
             TextWrapping="Wrap"
-            AcceptsReturn="True"
-            IsReadOnly="True" />
+            AcceptsReturn="True"/>
     </StackPanel>
 
 </Window>

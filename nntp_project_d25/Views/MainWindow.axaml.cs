@@ -12,24 +12,19 @@ namespace nntp_project_d25.Views;
 public partial class MainWindow : Window
 {
     private readonly TcpConnectionService _connectionService;
-    public MainViewModel ViewModel { get; }
+    private MainViewModel ViewModel { get; }
 
-    public MainWindow()
+    public MainWindow(TcpConnectionService connectionService)
     {
         InitializeComponent();
         ViewModel = new MainViewModel();
-        DataContext = this;
+        DataContext = ViewModel;
 
-        _connectionService = new TcpConnectionService();
+        _connectionService = connectionService;
     }
 
     private async void Button_OnClick(object? sender, RoutedEventArgs reEventArgs)
     {
-        const string host = "news.eternal-september.org";
-        const int port = 119;
-
-        _connectionService.ConnectAsync(host, port);
-
         try
         {
             Console.WriteLine("test");
@@ -43,7 +38,7 @@ public partial class MainWindow : Window
             
             foreach (var commands in answer)
             {
-                Console.WriteLine(commands);
+                ViewModel.CommandList += commands + Environment.NewLine;
             }
             
         }
