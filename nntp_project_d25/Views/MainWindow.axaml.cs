@@ -13,6 +13,7 @@ public partial class MainWindow : Window
 {
     private readonly TcpConnectionService _connectionService;
     private MainViewModel ViewModel { get; }
+    private bool _isBusy;
 
     public MainWindow(TcpConnectionService connectionService)
     {
@@ -21,19 +22,32 @@ public partial class MainWindow : Window
         DataContext = ViewModel;
 
         _connectionService = connectionService;
+        GetServerGreeting();
 
         //ServerLoop();
     }
 
-    private bool _isBusy;
+    private async void GetServerGreeting()
+    {
+        string? greeting = await _connectionService.ReadLineAsync();
+        ViewModel.CommandList = greeting + Environment.NewLine;
+        await _connectionService.SendLineAsync("CAPABILITIES");
+        List<string> answer = await _connectionService.ReadMultilineResponseAsync();
 
+        foreach (var commands in answer)
+        {
+            ViewModel.CommandList += commands + Environment.NewLine;
+            Console.WriteLine(commands);
+        };
+        
+    }
+
+    
     private async void Button_OnClick(object? sender, RoutedEventArgs reEventArgs)
     {
-        ViewModel.CommandList = await _connectionService.ReadLineAsync();
         if (_isBusy)
             return;
         _isBusy = true;
-        //ViewModel.CommandList = await _connectionService.ReadLineAsync();
         try
         {
             string message = ViewModel.Password + Environment.NewLine;
