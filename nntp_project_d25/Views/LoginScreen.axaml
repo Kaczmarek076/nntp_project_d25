@@ -1,23 +1,131 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+﻿
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:nntp_project_d25.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"
+        d:DesignWidth="800"
+        d:DesignHeight="600"
         x:Class="nntp_project_d25.Views.LoginScreen"
         x:DataType="viewModels:LoginViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="LoginScreen">
-        
-        <Design.DataContext>
-                <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-                <viewModels:LoginViewModel />
-        </Design.DataContext>
-        
-        <StackPanel>
-                <TextBox PlaceholderText="Serverhost Name" Text="{Binding ServerHostName, Mode=TwoWay}" ></TextBox>
-                <TextBox PlaceholderText="Port" Text="{Binding Port}"></TextBox>
-                <Button Content="Log In" Click="Button_OnClick"></Button>
-        </StackPanel>
+        Title="NNTP Client - Server Connection"
+        Width="800"
+        Height="600"
+        MinWidth="500"
+        MinHeight="450"
+        Background="#111827"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Styles>
+
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="#111827"/>
+            <Setter Property="Foreground" Value="#F9FAFB"/>
+            <Setter Property="BorderBrush" Value="#374151"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="#16A36A"/>
+        </Style>
+
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#16A36A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="15,12"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#128453"/>
+        </Style>
+
+    </Window.Styles>
+
+    <Grid>
+
+        <!-- Background content -->
+        <Border Background="#1F2937"
+                CornerRadius="16"
+                Width="400"
+                Padding="32"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+
+            <StackPanel Spacing="22">
+
+                <!-- Header -->
+                <StackPanel Spacing="8"
+                            HorizontalAlignment="Center">
+
+                    <TextBlock Text="NNTP CLIENT"
+                               FontSize="28"
+                               FontWeight="Bold"
+                               Foreground="#F9FAFB"
+                               HorizontalAlignment="Center"/>
+
+                    <TextBlock Text="Server connection"
+                               FontSize="14"
+                               Foreground="#9CA3AF"
+                               HorizontalAlignment="Center"/>
+
+                </StackPanel>
+
+                <!-- Divider -->
+                <Border Height="1"
+                        Background="#374151"/>
+
+                <!-- Server host -->
+                <StackPanel Spacing="8">
+
+                    <TextBlock Text="SERVER HOSTNAME"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="#D1D5DB"/>
+
+                    <TextBox Text="{Binding ServerHostName, Mode=TwoWay}"
+                             PlaceholderText="e.g. news.example.com"/>
+
+                </StackPanel>
+
+                <!-- Port -->
+                <StackPanel Spacing="8">
+
+                    <TextBlock Text="PORT"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="#D1D5DB"/>
+
+                    <TextBox Text="{Binding Port}"
+                             PlaceholderText="e.g. 119"/>
+
+                </StackPanel>
+
+                <!-- Login button -->
+                <Button Content="Connect to server"
+                        Click="Button_OnClick"
+                        HorizontalAlignment="Stretch"
+                        Margin="0,8,0,0"/>
+
+                <!-- Footer -->
+                <TextBlock Text="Connect to your NNTP news server"
+                           FontSize="11"
+                           Foreground="#6B7280"
+                           HorizontalAlignment="Center"/>
+
+            </StackPanel>
+
+        </Border>
+
+    </Grid>
+
 </Window>
+
+

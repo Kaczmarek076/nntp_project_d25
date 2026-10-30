@@ -44,17 +44,18 @@ public partial class MainWindow : Window
     
     private async void Button_Login(object? sender, RoutedEventArgs e)
     {
+        if (_isBusy)
+            return;
+        _isBusy = true;
         try
         {
             string message = "authinfo user " + ViewModel.Username + Environment.NewLine;
             await _connectionService.SendLineAsync(message);
-            ViewModel.CommandList += await _connectionService.ReadLineAsync() + Environment.NewLine;
+            message = await _connectionService.ReadLineAsync() + Environment.NewLine; //Eats unwanted line 
             
             message = "authinfo pass " + ViewModel.Password + Environment.NewLine;
             await _connectionService.SendLineAsync(message);
-            ViewModel.CommandList += await _connectionService.ReadLineAsync() + Environment.NewLine;
-            
-            ViewModel.CommandList += await _connectionService.ReadLineAsync() + Environment.NewLine;
+            ViewModel.CommandList += await _connectionService.ReadLineAsync() + Environment.NewLine; ;
         }
         catch (SocketException ex)
         {
@@ -67,6 +68,10 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             Console.WriteLine("Fejl: " + ex.Message);
+        }
+        finally
+        {
+            _isBusy = false;
         }
     }
 

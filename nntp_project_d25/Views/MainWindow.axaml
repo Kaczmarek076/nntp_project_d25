@@ -1,42 +1,228 @@
+
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:nntp_project_d25.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"
+        d:DesignWidth="1200"
+        d:DesignHeight="700"
         x:Class="nntp_project_d25.Views.MainWindow"
         x:DataType="vm:MainViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="nntp_project_d25">
+        Title="NNTP Client - Terminal"
+        Width="1200"
+        Height="700"
+        MinWidth="900"
+        MinHeight="550"
+        Background="#111827">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainViewModel />
     </Design.DataContext>
 
+    <Window.Styles>
 
-    <StackPanel Orientation="Horizontal">
-        <StackPanel Margin="20" Spacing="10">
-            <TextBox x:Name="CommandTextBox"
-                     Text="{Binding CommandList}"
-                     Foreground="Green"
-                     Background="Black"
-                     FontSize="12"
-                     Width="1250"
-                     Height="500"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap">
-            </TextBox>
-            <TextBox PlaceholderText="Commands"
-                     Text="{Binding IndputCommand}"
-                     KeyDown="InputElement_OnKeyDown">
-            </TextBox>
-        </StackPanel>
-        <StackPanel>
-            <TextBox PlaceholderText="Username" Text="{Binding Username}"></TextBox>
-            <TextBox PlaceholderText="Password" Text="{Binding Password}"></TextBox>
-            <Button Content="Login" Click="Button_Login"></Button>
-        </StackPanel>
-    </StackPanel>
+        <!-- TextBox styling -->
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="#111827"/>
+            <Setter Property="Foreground" Value="#F9FAFB"/>
+            <Setter Property="BorderBrush" Value="#374151"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="#16A36A"/>
+        </Style>
+
+        <!-- Button styling -->
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#16A36A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="14,10"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style Selector="TextBox:pointerover">
+            <Setter Property="Background" Value="#090E18"/>
+        </Style>
+
+    </Window.Styles>
+
+    <Grid Margin="24"
+          ColumnDefinitions="*,300"
+          ColumnSpacing="20">
+
+        <!-- TERMINAL PANEL -->
+        <Border Grid.Column="0"
+                Background="#1F2937"
+                CornerRadius="16"
+                Padding="20">
+
+            <Grid RowDefinitions="Auto,*,Auto"
+                  RowSpacing="16">
+
+                <!-- Terminal header -->
+                <Grid Grid.Row="0"
+                      ColumnDefinitions="*,Auto">
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="NNTP TERMINAL"
+                                   FontSize="22"
+                                   FontWeight="Bold"
+                                   Foreground="#F9FAFB"/>
+
+                        <TextBlock Text="Server communication and command output"
+                                   FontSize="12"
+                                   Foreground="#9CA3AF"/>
+                    </StackPanel>
+
+                    <Border Grid.Column="1"
+                            Background="#153D30"
+                            CornerRadius="6"
+                            Padding="10,6"
+                            VerticalAlignment="Center">
+
+                        <TextBlock Text="● CONNECTED"
+                                   Foreground="#4ADE80"
+                                   FontSize="11"
+                                   FontWeight="Bold"/>
+
+                    </Border>
+
+                </Grid>
+
+                <!-- Terminal output -->
+                <Border Grid.Row="1"
+                        Background="#090E18"
+                        BorderBrush="#374151"
+                        BorderThickness="1"
+                        CornerRadius="7"
+                        Padding="5">
+
+                    <TextBox x:Name="CommandTextBox"
+                             Text="{Binding CommandList}"
+                             Foreground="#4ADE80"
+                             Background="Transparent"
+                             FontFamily="Consolas"
+                             FontSize="13"
+                             AcceptsReturn="True"
+                             IsReadOnly="True"
+                             TextWrapping="Wrap"
+                             BorderThickness="0"/>
+
+                </Border>
+
+                <!-- Command input -->
+                <Grid Grid.Row="2"
+                      ColumnDefinitions="*,Auto"
+                      ColumnSpacing="10">
+
+                    <TextBox Grid.Column="0"
+                             Text="{Binding IndputCommand}"
+                             PlaceholderText="Enter NNTP command..."
+                             KeyDown="InputElement_OnKeyDown"
+                             VerticalContentAlignment="Center"/>
+                </Grid>
+
+            </Grid>
+
+        </Border>
+
+
+        <!-- RIGHT SIDEBAR -->
+        <Grid Grid.Column="1"
+              RowDefinitions="Auto,*"
+              RowSpacing="20">
+
+            <!-- Account panel -->
+            <Border Grid.Row="0"
+                    Background="#1F2937"
+                    CornerRadius="16"
+                    Padding="20">
+
+                <StackPanel Spacing="16">
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Account"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   Foreground="#F9FAFB"/>
+
+                        <TextBlock Text="Your NNTP credentials"
+                                   FontSize="12"
+                                   Foreground="#9CA3AF"/>
+                    </StackPanel>
+
+                    <Border Height="1"
+                            Background="#374151"/>
+
+                    <StackPanel Spacing="7">
+                        <TextBlock Text="USERNAME"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="#D1D5DB"/>
+
+                        <TextBox Text="{Binding Username}"
+                                 IsReadOnly="True"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="7">
+                        <TextBlock Text="PASSWORD"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="#D1D5DB"/>
+
+                        <TextBox Text="{Binding Password}"
+                                 IsReadOnly="True"
+                                 PasswordChar="●"/>
+                    </StackPanel>
+
+                    <Button Content="Account Login"
+                            Click="Button_Login"
+                            HorizontalAlignment="Stretch"/>
+
+                </StackPanel>
+
+            </Border>
+
+            <!-- Information panel -->
+            <Border Grid.Row="1"
+                    Background="#1F2937"
+                    CornerRadius="16"
+                    Padding="20">
+
+                <StackPanel Spacing="12">
+
+                    <TextBlock Text="INFORMATION"
+                               FontSize="12"
+                               FontWeight="Bold"
+                               Foreground="#9CA3AF"/>
+
+                    <Border Height="1"
+                            Background="#374151"/>
+
+                    <TextBlock Text="NNTP Client"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="#F9FAFB"/>
+
+                    <TextBlock Text="Use the terminal to communicate with your news server using NNTP commands."
+                               FontSize="12"
+                               TextWrapping="Wrap"
+                               Foreground="#9CA3AF"/>
+
+                </StackPanel>
+
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
 </Window>
