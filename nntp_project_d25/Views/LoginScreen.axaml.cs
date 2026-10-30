@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using nntp_project_d25.Service.TCP;
 using nntp_project_d25.ViewModels;
 
