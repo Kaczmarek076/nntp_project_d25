@@ -16,18 +16,27 @@
     </Design.DataContext>
 
 
-    <StackPanel Margin="20" Spacing="10">
-        <Button Content="Add test item"
-                Click="Button_OnClick" />
-        <TextBox PlaceholderText="Commands" Text="{Binding Password}"></TextBox>
-        <TextBox
-            Text="{Binding CommandList}"
-            Foreground="Green"
-            Background="Black"
-            FontSize="12"
-            TextWrapping="Wrap"
-            AcceptsReturn="True"
-            />
+    <StackPanel Orientation="Horizontal">
+        <StackPanel Margin="20" Spacing="10">
+            <TextBox x:Name="CommandTextBox"
+                     Text="{Binding CommandList}"
+                     Foreground="Green"
+                     Background="Black"
+                     FontSize="12"
+                     Width="1250"
+                     Height="500"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap">
+            </TextBox>
+            <TextBox PlaceholderText="Commands"
+                     Text="{Binding IndputCommand}"
+                     KeyDown="InputElement_OnKeyDown">
+            </TextBox>
+        </StackPanel>
+        <StackPanel>
+            <TextBox PlaceholderText="Username" Text="{Binding Username}"></TextBox>
+            <TextBox PlaceholderText="Password" Text="{Binding Password}"></TextBox>
+            <Button Content="Login" Click="Button_Login"></Button>
+        </StackPanel>
     </StackPanel>
-
 </Window>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using nntp_project_d25.Service.TCP;
 using nntp_project_d25.ViewModels;
@@ -23,8 +24,6 @@ public partial class MainWindow : Window
 
         _connectionService = connectionService;
         GetServerGreeting();
-
-        //ServerLoop();
     }
 
     private async void GetServerGreeting()
@@ -38,27 +37,24 @@ public partial class MainWindow : Window
         {
             ViewModel.CommandList += commands + Environment.NewLine;
             Console.WriteLine(commands);
-        };
-        
-    }
+        }
 
+        ;
+    }
     
-    private async void Button_OnClick(object? sender, RoutedEventArgs reEventArgs)
+    private async void Button_Login(object? sender, RoutedEventArgs e)
     {
-        if (_isBusy)
-            return;
-        _isBusy = true;
         try
         {
-            string message = ViewModel.Password + Environment.NewLine;
+            string message = "authinfo user " + ViewModel.Username + Environment.NewLine;
             await _connectionService.SendLineAsync(message);
-            List<string> answer = await _connectionService.ReadMultilineResponseAsync();
-
-            foreach (var commands in answer)
-            {
-                ViewModel.CommandList += commands + Environment.NewLine;
-                Console.WriteLine(commands);
-            }
+            ViewModel.CommandList += await _connectionService.ReadLineAsync() + Environment.NewLine;
+            
+            message = "authinfo pass " + ViewModel.Password + Environment.NewLine;
+            await _connectionService.SendLineAsync(message);
+            ViewModel.CommandList += await _connectionService.ReadLineAsync() + Environment.NewLine;
+            
+            ViewModel.CommandList += await _connectionService.ReadLineAsync() + Environment.NewLine;
         }
         catch (SocketException ex)
         {
@@ -72,25 +68,26 @@ public partial class MainWindow : Window
         {
             Console.WriteLine("Fejl: " + ex.Message);
         }
-        finally
-        {
-            _isBusy = false;
-        }
     }
 
-
-    public async void ServerLoop()
+    private async void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
     {
-        while (true)
+        if (e.Key.Equals(Key.Enter))
         {
+            if (_isBusy)
+                return;
+            _isBusy = true;
             try
             {
-                string message = ViewModel.Password + Environment.NewLine;
-                await _connectionService.SendLineAsync(message + Environment.NewLine);
+                string message = ViewModel.IndputCommand + Environment.NewLine;
+                await _connectionService.SendLineAsync(message);
                 List<string> answer = await _connectionService.ReadMultilineResponseAsync();
 
                 foreach (var commands in answer)
+                {
                     ViewModel.CommandList += commands + Environment.NewLine;
+                    Console.WriteLine(commands);
+                }
             }
             catch (SocketException ex)
             {
@@ -103,6 +100,11 @@ public partial class MainWindow : Window
             catch (Exception ex)
             {
                 Console.WriteLine("Fejl: " + ex.Message);
+            }
+            finally
+            {
+                _isBusy = false;
+                ViewModel.IndputCommand = string.Empty;
             }
         }
     }
