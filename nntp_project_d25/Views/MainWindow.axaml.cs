@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -14,7 +15,7 @@ public partial class MainWindow : Window
 {
     private readonly TcpConnectionService _connectionService;
     private MainViewModel ViewModel { get; }
-    private bool _isBusy;
+    private Semaphore _isBusySemaphore = new Semaphore(1, 1);
 
     public MainWindow(TcpConnectionService connectionService)
     {
@@ -28,30 +29,48 @@ public partial class MainWindow : Window
 
     private async void GetServerGreeting()
     {
-        string? greeting = await _connectionService.ReadLineAsync();
-        ViewModel.CommandList = greeting + Environment.NewLine;
-        await _connectionService.SendLineAsync("CAPABILITIES");
-        List<string> answer = await _connectionService.ReadMultilineResponseAsync();
-
-        foreach (var commands in answer)
+        if (!_isBusySemaphore.WaitOne(0))
+            return;
+        try
         {
-            ViewModel.CommandList += commands + Environment.NewLine;
-            Console.WriteLine(commands);
-        }
+            string? greeting = await _connectionService.ReadLineAsync();
+            ViewModel.CommandList = greeting + Environment.NewLine;
+            await _connectionService.SendLineAsync("CAPABILITIES");
+            List<string> answer = await _connectionService.ReadMultilineResponseAsync();
 
-        ;
+            foreach (var commands in answer)
+            {
+                ViewModel.CommandList += commands + Environment.NewLine;
+                Console.WriteLine(commands);
+            }
+        }
+        catch (SocketException ex)
+        {
+            Console.WriteLine("Netværksfejl: " + ex.Message);
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine("Læsefejl eller timeout: " + ex.Message);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Fejl: " + ex.Message);
+        }
+        finally
+        {
+            _isBusySemaphore.Release();
+        }
     }
     
     private async void Button_Login(object? sender, RoutedEventArgs e)
     {
-        if (_isBusy)
+        if (!_isBusySemaphore.WaitOne(0))
             return;
-        _isBusy = true;
         try
         {
             string message = "authinfo user " + ViewModel.Username + Environment.NewLine;
             await _connectionService.SendLineAsync(message);
-            message = await _connectionService.ReadLineAsync() + Environment.NewLine; //Eats unwanted line 
+            message = await _connectionService.ReadLineAsync() + Environment.NewLine;   //Eats unwanted line 
             
             message = "authinfo pass " + ViewModel.Password + Environment.NewLine;
             await _connectionService.SendLineAsync(message);
@@ -71,7 +90,7 @@ public partial class MainWindow : Window
         }
         finally
         {
-            _isBusy = false;
+            _isBusySemaphore.Release();
         }
     }
 
@@ -79,9 +98,8 @@ public partial class MainWindow : Window
     {
         if (e.Key.Equals(Key.Enter))
         {
-            if (_isBusy)
+            if (!_isBusySemaphore.WaitOne(0))
                 return;
-            _isBusy = true;
             try
             {
                 string message = ViewModel.IndputCommand + Environment.NewLine;
@@ -91,7 +109,6 @@ public partial class MainWindow : Window
                 foreach (var commands in answer)
                 {
                     ViewModel.CommandList += commands + Environment.NewLine;
-                    Console.WriteLine(commands);
                 }
             }
             catch (SocketException ex)
@@ -108,7 +125,7 @@ public partial class MainWindow : Window
             }
             finally
             {
-                _isBusy = false;
+                _isBusySemaphore.Release();
                 ViewModel.IndputCommand = string.Empty;
             }
         }

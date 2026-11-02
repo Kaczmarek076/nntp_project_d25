@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Data;
 
 namespace nntp_project_d25.Service.TCP;
 
@@ -72,7 +70,6 @@ public sealed class TcpConnectionService : IAsyncDisposable
     {
         var lines = new List<string>();
         string? line = await ReadLineAsync();
-        Console.WriteLine(line);
         
         if (line is null)
             throw new IOException("Server closed the connection.");
