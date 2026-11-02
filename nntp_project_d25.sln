@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nntp_project_d25", "nntp_project_d25\nntp_project_d25.csproj", "{DC5A972D-7990-4F96-AD95-3B5D37DB6565}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nntp_project_d25.Tests", "nntp_project_d25.Tests\nntp_project_d25.Tests.csproj", "{DF458137-D170-4CCA-A052-F0C20CEA3CB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{DC5A972D-7990-4F96-AD95-3B5D37DB6565}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC5A972D-7990-4F96-AD95-3B5D37DB6565}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC5A972D-7990-4F96-AD95-3B5D37DB6565}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF458137-D170-4CCA-A052-F0C20CEA3CB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF458137-D170-4CCA-A052-F0C20CEA3CB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF458137-D170-4CCA-A052-F0C20CEA3CB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF458137-D170-4CCA-A052-F0C20CEA3CB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
